@@ -7,6 +7,9 @@ task_name = params.task_name;
 lab = params.lab;
 ran_by = params.ran_by;
 sorted = params.sorted;
+if isfield(params,'requires_raw_emg')
+    requires_raw_emg = params.requires_raw_emg;
+end
 
 cds=commonDataStructure();
 cds.file2cds(data_file,['array', array_name],...
@@ -87,6 +90,14 @@ if ex.meta.hasEmg == true
    emgNames = ex.bin.data.Properties.VariableNames(emgMask);
    xds.EMG = ex.bin.data{:,emgMask};
    xds.EMG_names = emgNames;
+   if requires_raw_emg
+       raw_EMG_table = table2array(cds.emg);
+       xds.raw_EMG = raw_EMG_table(:,2:end);
+       xds.raw_EMG_time_frame = raw_EMG_table(:,1);
+   else
+       xds.raw_EMG = [];
+       xds.raw_EMG_time_frame = [];
+   end
 end
 if ex.meta.hasForce == true
    fxMask = ~cellfun(@(x)isempty(strfind(x,'fx')),ex.bin.data.Properties.VariableNames);
