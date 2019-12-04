@@ -7,6 +7,8 @@ task_name = params.task_name;
 lab = params.lab;
 ran_by = params.ran_by;
 sorted = params.sorted;
+
+requires_raw_emg = 0;
 if isfield(params,'requires_raw_emg')
     requires_raw_emg = params.requires_raw_emg;
 end
