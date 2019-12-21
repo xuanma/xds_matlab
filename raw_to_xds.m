@@ -8,6 +8,7 @@ lab = params.lab;
 ran_by = params.ran_by;
 sorted = params.sorted;
 
+% Here are some fields for raw data
 requires_raw_emg = 0;
 requires_raw_force = 0;
 if isfield(params,'requires_raw_emg')
