@@ -9,8 +9,12 @@ ran_by = params.ran_by;
 sorted = params.sorted;
 
 requires_raw_emg = 0;
+requires_raw_force = 0;
 if isfield(params,'requires_raw_emg')
     requires_raw_emg = params.requires_raw_emg;
+end
+if isfield(params,'requires_raw_force')
+    requires_raw_force = params.requires_raw_force;
 end
 
 cds=commonDataStructure();
@@ -105,7 +109,15 @@ if ex.meta.hasForce == true
    fxMask = ~cellfun(@(x)isempty(strfind(x,'fx')),ex.bin.data.Properties.VariableNames);
    fyMask = ~cellfun(@(x)isempty(strfind(x,'fy')),ex.bin.data.Properties.VariableNames);
    xds.force(:, 1) = ex.bin.data{:,fxMask};
-   xds.force(:, 2) = ex.bin.data{:,fyMask};  
+   xds.force(:, 2) = ex.bin.data{:,fyMask};
+   if requires_raw_force
+       raw_force_table = table2array(cds.force);
+       xds.raw_force = raw_force_table(:,2:end);
+       xds.raw_force_time_frame = raw_force_table(:,1);
+   else
+       xds.raw_force = [];
+       xds.raw_force_time_frame = [];
+   end
 end
 if ex.meta.hasKinematics == true
    xMask = ~cellfun(@(x)isempty(strfind(x,'x')),ex.bin.data.Properties.VariableNames);
